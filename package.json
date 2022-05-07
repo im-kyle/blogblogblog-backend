@@ -4,7 +4,8 @@
   "description": "Z-Prefix Blog App Backend",
   "main": "index.js",
   "scripts": {
-    "start": "npm run knex:startup && node index.js",
+    "start": "node index.js",
+    "postinstall": "npm run knex:startup",
     "knex:startup": "npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run",
     "knex:migrations": "npx knex migrate:latest",
     "knex:seeds": "npx knex seed:run"

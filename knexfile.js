@@ -10,10 +10,7 @@ module.exports = {
 
   development: {
     client: 'pg',
-    connection: connectionString,
-    database: 'blog_db',
-    user: 'postgres',
-    password: 'password'
+    connection: connectionString
   },
 
   staging: {
