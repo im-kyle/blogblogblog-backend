@@ -111,9 +111,7 @@ app.post('/register', async (req, res, next) => {
     const user = req.body;
     const hash = await bcrypt.hash(password, 12);
     await dbConnection.insert({username: username, password_hash: hash, first_name: first_name, last_name: last_name}).from('users');
-    res.status(201).json(
-      "success"
-     );
+    res.status(201).json("success");
   } catch(e) {
     res.status(500).send('Something Went Wrong');
   }
@@ -124,10 +122,11 @@ app.post('/login', async(req, res, next) => {
   try {
     const {username, password} = req.body;
     user = await dbConnection.select('*').where({username: username}).from('users')
+    console.log('Awaiting response from database')
     if (user.length) {
       const validPass = await bcrypt.compare(password, user[0].password_hash);
       if(validPass) {
-        console.log('anything')
+        console.log('Token is valid')
         res.status(200).json({
           user: username,
           token: generateToken(username)
