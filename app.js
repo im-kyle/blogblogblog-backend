@@ -1,13 +1,12 @@
 //express set up
 const express = require('express');
 const app = express();
-const knex = require("knex");
 const cors = require('cors');
 
 //db auth setup
 require("dotenv").config()
 const morgan = require('morgan');
-const bcrypt = require ('bcryptjs');
+const bcrypt = require('bcryptjs');
 const dbConnection = require('./db/dbConnection.js');
 const session = require("express-session")
 const token = require('./utils/token')
@@ -114,10 +113,14 @@ app.post('/login', async(req, res) => {
   try {
     const {username, password} = req.body;
     user = await dbConnection.select('*').where({username: username}).from('users')
-    if (user.length){
+    console.log(user);
+    if (user.length) {
       const validPass = await bcrypt.compare(password, user[0].password_hash);
+      console.log(user[0].password_hash)
+      console.log(password);
+      console.log(validPass);
       if(validPass) {
-        res.status(201).json({
+        res.status(200).json({
           user: username,
           token:generateToken(username)
          });
@@ -125,7 +128,7 @@ app.post('/login', async(req, res) => {
       else {
         res.json('Wrong Password')
       }
-      }
+    }
       else {
         res.status(404).json('User not found')
       }

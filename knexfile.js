@@ -11,7 +11,7 @@ module.exports = {
   development: {
     client: 'pg',
     connection: connectionString,
-    database: 'blogblogblog',
+    database: 'blog_db',
     user: 'postgres',
     password: 'password'
   },
@@ -19,7 +19,7 @@ module.exports = {
   staging: {
     client: 'postgresql',
     connection: {
-      database: 'blogblogblog',
+      database: 'blog_db',
       user: 'postgres',
       password: 'password'
     },
