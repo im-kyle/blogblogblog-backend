@@ -9,7 +9,7 @@ const morgan = require('morgan');
 const bcrypt = require('bcryptjs');
 const dbConnection = require('./db/dbConnection.js');
 const session = require("express-session")
-const token = require('./utils/token')
+const generateToken = require('./utils/token')
 
 //middleware
 app.use(morgan("tiny"));
@@ -120,9 +120,10 @@ app.post('/login', async(req, res) => {
       console.log(password);
       console.log(validPass);
       if(validPass) {
+        console.log('anything')
         res.status(200).json({
           user: username,
-          token:generateToken(username)
+          token: generateToken(username)
          });
       }
       else {
@@ -133,7 +134,8 @@ app.post('/login', async(req, res) => {
         res.status(404).json('User not found')
       }
     } catch(e) {
-    res.status(500).send('Something Went Wrong');
+      console.log(e);
+      res.status(500).send('Something Went Wrong');
     }
   });
 
