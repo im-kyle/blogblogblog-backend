@@ -17,8 +17,13 @@ app.use(cors());
 app.use(express.json());
 
 //requests and responses
+//root route
+app.get('/', (req, res, next) => {
+  res.status(200).json('Welcome to the BlogBlogBlog API! You may query data by posts, and the users who created those posts!')
+})
+
 //All Posts
-app.get('/posts', function(req, res){
+app.get('/posts/', (req, res, next) => {
   dbConnection
   .select('*')
   .from('posts')
@@ -31,7 +36,8 @@ app.get('/posts', function(req, res){
 });
 
 //All Posts by User
-app.get('/posts/user/:user', function(req, res){
+app.get('/posts/user/:user', (req, res, next) => {
+  console.log(req.params.user)
   dbConnection
   .select('*')
   .where({created_by: req.params.user})
@@ -46,29 +52,32 @@ app.get('/posts/user/:user', function(req, res){
 
 
 //Create Post
-app.post('/posts', function(req, res){
+app.post('/posts/', (req, res, next) => {
   dbConnection
   .insert({ title: req.body.title, content: req.body.content, created_by: req.body.created_by }).from('posts')
-      .then((data) => res.status(201).json(data))
-      .catch((err) => {
-        res.status(404).json({ message: "Something is wrong."})
+  .then((data) => res.status(201).json(data))
+  .catch((err) => {
+      res.status(404).json({ message: "Something is wrong."})
     })
   });
 
 
 //Delete Post
-app.delete('/posts/', function(req, res){
-dbConnection
-.delete('*').where({title: req.body.title, created_by:req.body.user}).from('posts')
-    .then((data) => res.status(201).json(data))
-    .catch((err) => {
-      res.status(404).json({ message: "Something is wrong."})
+app.delete('/posts/', (req, res, next) => {
+  dbConnection
+  .delete('*')
+  .from('posts')
+  .where({title: req.body.title, created_by: req.body.user})
+  .then((data) => res.status(201).json(data))
+  .catch((err) => {
+    console.log(err);
+    res.status(404).json({ message: "Something is wrong."})
   })
 });
 
 
 //Search Post
-app.get('/posts/specific/:title', function(req, res){
+app.get('/posts/specific/:title', (req, res, next) => {
 dbConnection
 .select('*')
 .where({title: req.params.title})
@@ -81,20 +90,22 @@ dbConnection
 
 
 //Edit Post
-app.patch('/posts/edit', function(req, res){
-  dbConnection
-  .update({content: req.body.content})
-  .where({title: req.body.title, created_by:req.body.user})
+app.patch('/posts/edit', async (req, res, next) => {
+  const {title, content, created_by } = req.body
+  await dbConnection
+  .update({content: content})
+  .where({title: title, created_by: created_by})
   .from('posts')
   .then((data) => res.status(201).json(data))
   .catch((err) => {
-        res.status(404).json({ message: "Something is wrong."})
+      console.log(err);
+      res.status(404).json({ message: "Something is wrong."})
     })
   });
 
 
 //Register
-app.post('/register', async (req, res) => {
+app.post('/register', async (req, res, next) => {
   try {
     const {username, password, first_name, last_name} = req.body;
     const user = req.body;
@@ -109,16 +120,12 @@ app.post('/register', async (req, res) => {
 });
 
 //Login
-app.post('/login', async(req, res) => {
+app.post('/login', async(req, res, next) => {
   try {
     const {username, password} = req.body;
     user = await dbConnection.select('*').where({username: username}).from('users')
-    console.log(user);
     if (user.length) {
       const validPass = await bcrypt.compare(password, user[0].password_hash);
-      console.log(user[0].password_hash)
-      console.log(password);
-      console.log(validPass);
       if(validPass) {
         console.log('anything')
         res.status(200).json({
@@ -134,7 +141,6 @@ app.post('/login', async(req, res) => {
         res.status(404).json('User not found')
       }
     } catch(e) {
-      console.log(e);
       res.status(500).send('Something Went Wrong');
     }
   });

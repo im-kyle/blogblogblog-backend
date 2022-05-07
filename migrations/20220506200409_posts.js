@@ -8,7 +8,7 @@
       table.increments("id");
       table.string("created_by");
       table.string("title").unique().notNullable();
-      table.string("content");
+      table.text("content");
       table.timestamp('created_at').notNullable().index().defaultTo(knex.raw('now()'));
   })
 };
