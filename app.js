@@ -19,7 +19,7 @@ app.use(express.json());
 
 //requests and responses
 //All Posts
-app.get('/api/posts', function(req, res){
+app.get('/posts', function(req, res){
   dbConnection
   .select('*')
   .from('posts')
@@ -32,7 +32,7 @@ app.get('/api/posts', function(req, res){
 });
 
 //All Posts by User
-app.get('/api/posts/user/:user', function(req, res){
+app.get('/posts/user/:user', function(req, res){
   dbConnection
   .select('*')
   .where({created_by: req.params.user})
@@ -47,7 +47,7 @@ app.get('/api/posts/user/:user', function(req, res){
 
 
 //Create Post
-app.post('/api/posts', function(req, res){
+app.post('/posts', function(req, res){
   dbConnection
   .insert({ title: req.body.title, content: req.body.content, created_by: req.body.created_by }).from('posts')
       .then((data) => res.status(201).json(data))
@@ -58,7 +58,7 @@ app.post('/api/posts', function(req, res){
 
 
 //Delete Post
-app.delete('/api/posts/', function(req, res){
+app.delete('/posts/', function(req, res){
 dbConnection
 .delete('*').where({title: req.body.title, created_by:req.body.user}).from('posts')
     .then((data) => res.status(201).json(data))
@@ -69,7 +69,7 @@ dbConnection
 
 
 //Search Post
-app.get('/api/posts/specific/:title', function(req, res){
+app.get('/posts/specific/:title', function(req, res){
 dbConnection
 .select('*')
 .where({title: req.params.title})
@@ -82,7 +82,7 @@ dbConnection
 
 
 //Edit Post
-app.patch('/api/posts/edit', function(req, res){
+app.patch('/posts/edit', function(req, res){
   dbConnection
   .update({content: req.body.content})
   .where({title: req.body.title, created_by:req.body.user})
