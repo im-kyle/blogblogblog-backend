@@ -140,6 +140,7 @@ app.post('/login', async(req, res, next) => {
         res.status(404).json('User not found')
       }
     } catch(e) {
+      console.log(e);
       res.status(500).send('Something Went Wrong');
     }
   });
