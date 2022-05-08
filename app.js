@@ -91,7 +91,7 @@ dbConnection
 
 //Edit Post
 app.patch('/posts/edit', async (req, res, next) => {
-  const {title, content, created_by } = req.body
+  const { title, content, created_by } = req.body
   await dbConnection
   .update({content: content})
   .where({title: title, created_by: created_by})
@@ -102,6 +102,17 @@ app.patch('/posts/edit', async (req, res, next) => {
       res.status(404).json({ message: "Something is wrong."})
     })
   });
+
+  // app.patch('/posts/edit', function(req, res){
+  //   dbConnection
+  //   .update({content: req.body.content})
+  //   .where({title: req.body.title, created_by:req.body.user})
+  //   .from('posts')
+  //   .then((data) => res.status(201).json(data))
+  //   .catch((err) => {
+  //         res.status(404).json({ message: "Something is wrong."})
+  //     })
+  //   });
 
 
 //Register
